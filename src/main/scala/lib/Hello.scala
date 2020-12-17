@@ -39,6 +39,8 @@ object CAPIContentService extends ContentService {
   //TODO: share one backend for PROD
   implicit lazy val backend = HttpURLConnectionBackend()
 
+  val apiKey = "XXX" //TODO: put real key somewhere
+
   def getText(url: URI): IO[String] = {
     if(url.getHost == "www.theguardian.com") {
       val path = url.getPath.tail

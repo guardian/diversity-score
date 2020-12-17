@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region eu-central-1)
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/amy-diversity-score
+  build:
+    commands:
+      - sbt assembly
+      - echo Building the Docker image with tags latest, $IMAGE_TAG, $CODEBUILD_BUILD_NUMBER and $GIT_BRANCH...
+      - docker build -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$IMAGE_TAG -t $REPOSITORY_URI:$CODEBUILD_BUILD_NUMBER -t $REPOSITORY_URI:$GIT_BRANCH .
+  post_build:
+    commands:
+      - docker push $REPOSITORY_URI

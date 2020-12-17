@@ -24,7 +24,8 @@ lazy val root = (project in file("."))
       "org.http4s" %% "http4s-blaze-server" % http4sVersion,
       "org.http4s" %% "http4s-blaze-client" % http4sVersion
     ),
-    mainClass in assembly := Some("lib.Main")
+    mainClass in assembly := Some("lib.Main"),
+    assemblyOutputPath in assembly := file("dist/diversity-score.jar")
   )
 
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.

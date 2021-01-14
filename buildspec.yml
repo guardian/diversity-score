@@ -8,7 +8,7 @@ phases:
       - GIT_BRANCH=${CODEBUILD_WEBHOOK_HEAD_REF:=$CODEBUILD_SOURCE_VERSION}
       - GIT_BRANCH=$(echo $GIT_BRANCH | sed s/refs\\/heads\\///g | sed s/[^a-zA-Z0-9_-]/-/g | tr A-Z a-z) # normalize branch name (only lowercase, alphanumeric char plus underscore or dash without refs/heads/ prefix)
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --no-include-email --region eu-central-1)
+      - $(aws ecr get-login --no-include-email --region eu-west-1)
       - REPOSITORY_URI=702972749545.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/amy-diversity-score
   build:
     commands:

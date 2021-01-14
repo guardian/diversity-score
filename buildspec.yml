@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    DOCKERHUB_USERNAME: amy/dockerhub/credentials:username
+    DOCKERHUB_PASSWORD: amy/dockerhub/credentials:password
+
 phases:
   pre_build:
     commands:
@@ -7,6 +12,8 @@ phases:
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       - GIT_BRANCH=${CODEBUILD_WEBHOOK_HEAD_REF:=$CODEBUILD_SOURCE_VERSION}
       - GIT_BRANCH=$(echo $GIT_BRANCH | sed s/refs\\/heads\\///g | sed s/[^a-zA-Z0-9_-]/-/g | tr A-Z a-z) # normalize branch name (only lowercase, alphanumeric char plus underscore or dash without refs/heads/ prefix)
+      - echo Logging in to Docker Hub...
+      - echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region eu-west-1)
       - REPOSITORY_URI=702972749545.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/amy-diversity-score

@@ -25,6 +25,4 @@ phases:
   post_build:
     commands:
       - docker push $REPOSITORY_URI
-artifacts:
-  files:
-    - imagedefinitions.json
+      - aws ecs update-service --force-new-deployment --service amyu-diversity-score-service --cluster amy-diversity-score --r eu-west-1

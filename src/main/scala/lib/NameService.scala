@@ -2,10 +2,9 @@ package lib
 
 import java.io.ByteArrayInputStream
 import java.nio.charset.Charset
-
 import cats.effect.IO
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.auth.{AWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, SystemPropertiesCredentialsProvider}
+import com.amazonaws.auth.{AWSCredentialsProviderChain, DefaultAWSCredentialsProviderChain, EC2ContainerCredentialsProviderWrapper, EnvironmentVariableCredentialsProvider, SystemPropertiesCredentialsProvider}
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.comprehend.AmazonComprehendClientBuilder
 import com.amazonaws.services.comprehend.model.{BatchDetectEntitiesRequest, DetectEntitiesRequest, EntityType}
@@ -27,10 +26,12 @@ trait NameService {
 }
 
 object NameService extends NameService {
-  lazy val credentialsChain = new AWSCredentialsProviderChain(
+
+  lazy val credentialsChain = new AWSCredentialsProviderChain(new AWSCredentialsProviderChain(
     new EnvironmentVariableCredentialsProvider,
     new SystemPropertiesCredentialsProvider,
-    new ProfileCredentialsProvider("targeting")
+    new ProfileCredentialsProvider("targeting"),
+    new EC2ContainerCredentialsProviderWrapper)
   )
 
   lazy val comprehend = AmazonComprehendClientBuilder.standard()

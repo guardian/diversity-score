@@ -1,9 +1,16 @@
-//package lib
-//
-//import lib.ScoreException.{EmptyInputException, NoNameException}
-//import org.scalatest.{FlatSpec, Matchers}
-//
-//class ScoreTest extends FlatSpec with Matchers {
+package lib
+
+import lib.genderService.{NameWithGender, Male}
+import lib.scoringService.{Score, ScoreResult}
+import org.scalatest.{FlatSpec, Matchers}
+import cats.data.NonEmptyList
+
+class ScoreTest extends FlatSpec with Matchers {
+  it should "return json with a score object and value when a score can be determined" in {
+    val scoreResult = ScoreResult(Score(1), NonEmptyList(NameWithGender("Thomas", Some(Male))))
+
+  }
+}
 //
 //  object MockNameService extends NameService {
 //    def names(text: String): Set[NameService] = {

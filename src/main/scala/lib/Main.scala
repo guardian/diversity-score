@@ -1,7 +1,6 @@
 package lib
 
 import java.net.URI
-
 import cats.data.Kleisli
 import cats.effect.{ExitCode, IO, IOApp}
 import io.circe.{Decoder, Encoder, HCursor, Json, JsonFloat}
@@ -11,6 +10,9 @@ import sttp.client.{HttpURLConnectionBackend, basicRequest}
 import sttp.client._
 import sttp.model.Uri
 import cats.effect._
+import lib.genderService.{Gender, GenderService}
+import lib.nameService.{Name, NameService}
+import lib.scoringService.{Score, ScoreResult, ScoringService}
 import org.http4s.{EntityBody, EntityDecoder, HttpRoutes, Response, _}
 import org.http4s.dsl.io._
 import org.http4s.implicits._
@@ -66,7 +68,9 @@ object Main extends IOApp {
   }
 
   implicit val encodeScore: Encoder[Score] = new Encoder[Score] {
-    final def apply(s: Score): Json = Json.fromFloat(s.scoreVal).getOrElse(Json.fromString("n/a"))
+    // The inability to create a score from an existing score value is unlikely to happen in
+    // practice, the underlying value would have to be determined to not be real
+    final def apply(s: Score): Json = Json.fromFloat(s.scoreVal).getOrElse(Json.fromString(""))
   }
 
   implicit val encodeScoreResult: Encoder[ScoreResult] = Encoder

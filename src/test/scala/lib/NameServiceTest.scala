@@ -1,6 +1,6 @@
 package lib
 
-import lib.NameService.batchText
+import lib.nameService.NameService.batchText
 import org.scalatest.{FlatSpec, Matchers}
 
 class NameServiceTest extends FlatSpec with Matchers {

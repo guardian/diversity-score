@@ -25,4 +25,9 @@ phases:
   post_build:
     commands:
       - docker push $REPOSITORY_URI
-      - aws ecs update-service --force-new-deployment --service amyu-diversity-score-service --cluster amy-diversity-score --r eu-west-1
+      - |-
+          if [ $GIT_BRANCH = 'main' ]; then
+            aws ecs update-service --force-new-deployment --service amyu-diversity-score-service --cluster amy-diversity-score --r eu-west-1
+          else
+            echo "Not building master branch. Hence not deploying"
+          fi

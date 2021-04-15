@@ -1,25 +1,16 @@
-package lib
+package lib.nameService
+
+import cats.effect.IO
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.amazonaws.auth.{AWSCredentialsProviderChain, EC2ContainerCredentialsProviderWrapper, EnvironmentVariableCredentialsProvider, SystemPropertiesCredentialsProvider}
+import com.amazonaws.regions.Regions
+import com.amazonaws.services.comprehend.AmazonComprehendClientBuilder
+import com.amazonaws.services.comprehend.model.{BatchDetectEntitiesRequest, EntityType}
 
 import java.io.ByteArrayInputStream
 import java.nio.charset.Charset
-import cats.effect.IO
-import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.auth.{AWSCredentialsProviderChain, DefaultAWSCredentialsProviderChain, EC2ContainerCredentialsProviderWrapper, EnvironmentVariableCredentialsProvider, SystemPropertiesCredentialsProvider}
-import com.amazonaws.regions.Regions
-import com.amazonaws.services.comprehend.AmazonComprehendClientBuilder
-import com.amazonaws.services.comprehend.model.{BatchDetectEntitiesRequest, DetectEntitiesRequest, EntityType}
-
-import scala.jdk.CollectionConverters._
-import cats.implicits._
-import cats.instances.byte
-
 import scala.collection.mutable.ListBuffer
-
-case class Name(name: String) extends AnyVal
-
-case class NamesServiceError(underlying: Throwable) extends Exception {
-  override def toString: String = underlying.toString
-}
+import scala.jdk.CollectionConverters._
 
 trait NameService {
   def names(s: String): IO[Set[Name]]
@@ -30,9 +21,9 @@ object NameService extends NameService {
   lazy val credentialsChain = new AWSCredentialsProviderChain(new AWSCredentialsProviderChain(
     new EnvironmentVariableCredentialsProvider,
     new SystemPropertiesCredentialsProvider,
-    new ProfileCredentialsProvider("targeting"),
-    new EC2ContainerCredentialsProviderWrapper)
-  )
+    new ProfileCredentialsProvider("developerPlayground"),
+    new EC2ContainerCredentialsProviderWrapper
+  ))
 
   lazy val comprehend = AmazonComprehendClientBuilder.standard()
     .withCredentials(credentialsChain)
